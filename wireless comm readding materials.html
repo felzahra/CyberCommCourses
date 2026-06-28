@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>CyberDefend · AWS Cloud Foundation · Complete 11 Sections</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fc;
+            color: #1a2c3e;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== MOBILE TOP BAR ===== */
+        .mobile-topbar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            border-bottom: 1px solid #e6edf4;
+            flex-shrink: 0;
+            z-index: 200;
+        }
+        .mobile-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hamburger-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #e6edf4;
+            border-radius: 10px;
+            background: #f9fbfe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .hamburger-btn:hover { background: #eef2f8; }
+        .hamburger-btn svg { width: 20px; height: 20px; stroke: #1a2c3e; }
+        .mobile-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mobile-logo-icon {
+            background: #ff9900;
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .mobile-logo-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0b2b3b;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 340px;
+            background: #fff;
+            border-right: 1px solid #e6edf4;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            height: 100%;
+        }
+        .brand {
+            padding: 24px;
+            border-bottom: 1px solid #eef2f8;
+            background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            background: #ff9900;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 6px 12px rgba(255,153,0,0.2);
+        }
+        .logo-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0b2b3b;
+        }
+        .logo-text span {
+            font-size: 0.65rem;
+            color: #ff9900;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .tagline {
+            font-size: 0.7rem;
+            color: #5c6f87;
+            margin-top: 8px;
+            border-left: 3px solid #ff9900;
+            padding-left: 10px;
+        }
+
+        .back-link {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ff9900;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-bottom: 1px solid #eef2f8;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        .back-link:hover {
+            background: #f0f9fe;
+            color: #e68a00;
+        }
+        .back-link::before {
+            content: "←";
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .nav-list {
+            padding: 8px 0 20px 0;
+            flex: 1;
+        }
+        .section-title {
+            padding: 12px 20px 4px;
+            font-size: 0.7rem;
+            color: #ff9900;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            margin: 1px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: #fff3e0;
+            color: #e68a00;
+            font-weight: 600;
+            border-left-color: #ff9900;
+        }
+        .check-icon {
+            font-size: 1rem;
+            min-width: 22px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 18px;
+            font-size: 0.6rem;
+            color: #8ba0b2;
+            border-top: 1px solid #edf2f7;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ===== MOBILE SIDEBAR OVERLAY ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(2px);
+            z-index: 300;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+        }
+
+        /* ===== MAIN CONTENT WRAPPER ===== */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 36px;
+            background: #f5f7fc;
+            min-width: 0;
+        }
+
+        /* ===== SLIDES CARD ===== */
+        .slides-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            border: 1px solid #eef2f8;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            padding: 24px 28px 16px 28px;
+            border-bottom: 1px solid #f0f4f9;
+        }
+        .lesson-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #ff9900;
+            background: #fff3e0;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            margin-bottom: 12px;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b2b3b;
+            margin: 8px 0 8px 0;
+            line-height: 1.25;
+        }
+        .sub {
+            color: #5c6f87;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eef2f8;
+            margin: 0 28px;
+            gap: 4px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6c7e8f;
+            cursor: pointer;
+            border-radius: 30px 30px 0 0;
+            transition: 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .tab-btn.active {
+            color: #ff9900;
+            background: #fff3e0;
+            border-bottom: 3px solid #ff9900;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+            padding: 24px 28px 28px 28px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .slides-container {
+            border-radius: 20px;
+            overflow: hidden;
+            background: #f0f4f9;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .slides-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+        .slides-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ===== DOWNLOADS ===== */
+        .downloads-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .download-item {
+            background: #f9fbfe;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid #eef2f8;
+        }
+        .download-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: #0b2b3b;
+            line-height: 1.3;
+        }
+        .download-info p {
+            font-size: 0.75rem;
+            color: #5c6f87;
+        }
+        .btn-download {
+            background: #ff9900;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: 0.2s;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-download:hover {
+            background: #e68a00;
+        }
+
+        .info-grid {
+            background: #f9fbfe;
+            border-radius: 18px;
+            padding: 14px 20px;
+            margin-top: 16px;
+            border-left: 4px solid #ff9900;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: #3a4d60;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: #7f8c9a;
+            padding-top: 28px;
+            border-top: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-card {
+            background: white;
+            border-radius: 28px;
+            max-width: 400px;
+            width: 100%;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+            animation: modalPop 0.25s ease-out;
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #0b2b3b;
+        }
+        .modal-card p {
+            color: #5c6f87;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 0.82rem;
+        }
+        .modal-btn-primary {
+            background: #ff9900;
+            color: white;
+        }
+        .modal-btn-primary:hover { background: #e68a00; }
+        .modal-btn-secondary {
+            background: #eef2f8;
+            color: #2c3e50;
+        }
+        .modal-btn-secondary:hover { background: #e2e8f0; }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #eef2f8; }
+        ::-webkit-scrollbar-thumb { background: #bdd3e4; border-radius: 8px; }
+
+        /* ========================================
+           RESPONSIVE — TABLET (≤ 900px)
+           ======================================== */
+        @media (max-width: 900px) {
+            .sidebar { width: 280px; }
+            .main-content { padding: 20px 20px; }
+            .card-header { padding: 20px 20px 14px 20px; }
+            .card-header h2 { font-size: 1.2rem; }
+            .tabs { margin: 0 20px; }
+            .tab-content { padding: 20px; }
+        }
+
+        /* ========================================
+           RESPONSIVE — MOBILE (≤ 768px)
+           ======================================== */
+        @media (max-width: 768px) {
+            /* Show mobile top bar */
+            .mobile-topbar {
+                display: flex;
+            }
+
+            /* Sidebar becomes a slide-out drawer */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                max-width: 85vw;
+                z-index: 400;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: none;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+            }
+
+            /* Overlay behind sidebar */
+            .sidebar-overlay {
+                display: block;
+                pointer-events: none;
+            }
+            .sidebar-overlay.active {
+                pointer-events: auto;
+            }
+
+            /* Content fills full width */
+            .content-wrapper {
+                flex: 1;
+                overflow: hidden;
+            }
+            .main-content {
+                padding: 16px 12px;
+                padding-top: 12px;
+            }
+
+            /* Card adjustments */
+            .slides-card {
+                border-radius: 20px;
+            }
+            .card-header {
+                padding: 16px 16px 12px 16px;
+            }
+            .card-header h2 {
+                font-size: 1.05rem;
+            }
+            .sub {
+                font-size: 0.78rem;
+            }
+            .lesson-badge {
+                font-size: 0.62rem;
+                padding: 3px 10px;
+            }
+
+            /* Tabs */
+            .tabs {
+                margin: 0 12px;
+            }
+            .tab-btn {
+                padding: 8px 14px;
+                font-size: 0.78rem;
+            }
+
+            /* Tab content */
+            .tab-content {
+                padding: 16px 12px 20px 12px;
+            }
+
+            /* Slides container — make it responsive */
+            .slides-container {
+                border-radius: 14px;
+            }
+
+            /* Downloads */
+            .download-item {
+                padding: 14px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-download {
+                align-self: flex-start;
+            }
+
+            /* Info grid */
+            .info-grid {
+                padding: 12px 14px;
+                font-size: 0.76rem;
+                border-radius: 14px;
+            }
+
+            /* Footer */
+            footer {
+                margin-top: 28px;
+                padding-top: 20px;
+                font-size: 0.68rem;
+                padding-bottom: 16px;
+            }
+
+            /* Modal */
+            .modal-card {
+                padding: 24px 20px;
+                border-radius: 22px;
+            }
+            .modal-card h3 { font-size: 1.15rem; }
+            .modal-card p { font-size: 0.82rem; }
+            .modal-btn {
+                padding: 9px 16px;
+                font-size: 0.78rem;
+            }
+        }
+
+        /* ========================================
+           RESPONSIVE — SMALL MOBILE (≤ 420px)
+           ======================================== */
+        @media (max-width: 420px) {
+            .mobile-topbar { padding: 10px 12px; }
+            .hamburger-btn { width: 34px; height: 34px; border-radius: 8px; }
+            .mobile-logo-icon { width: 28px; height: 28px; border-radius: 7px; font-size: 0.9rem; }
+            .mobile-logo-text { font-size: 0.88rem; }
+            .main-content { padding: 10px 8px; padding-top: 8px; }
+            .card-header { padding: 14px 14px 10px 14px; }
+            .card-header h2 { font-size: 0.95rem; }
+            .sub { font-size: 0.72rem; }
+            .tabs { margin: 0 10px; }
+            .tab-btn { padding: 7px 12px; font-size: 0.72rem; }
+            .tab-content { padding: 12px 10px 16px 10px; }
+            .info-grid { padding: 10px 12px; font-size: 0.72rem; }
+            .download-info h4 { font-size: 0.88rem; }
+            .download-info p { font-size: 0.7rem; }
+            .btn-download { padding: 7px 16px; font-size: 0.7rem; }
+        }
+
+        /* Safe area insets for notched phones */
+        @supports (padding: env(safe-area-inset-top)) {
+            .mobile-topbar {
+                padding-top: calc(12px + env(safe-area-inset-top));
+                padding-left: calc(16px + env(safe-area-inset-left));
+                padding-right: calc(16px + env(safe-area-inset-right));
+            }
+            .sidebar {
+                padding-top: env(safe-area-inset-top);
+            }
+            .main-content {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== MOBILE TOP BAR (hidden on desktop) ===== -->
+<div class="mobile-topbar">
+    <div class="mobile-topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+        <div class="mobile-logo">
+            <div class="mobile-logo-icon">☁️</div>
+            <span class="mobile-logo-text">CyberDefend</span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SIDEBAR OVERLAY (mobile only) ===== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ===== CONTENT WRAPPER (sidebar + main) ===== -->
+<div class="content-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="logo">
+                <div class="logo-icon">☁️</div>
+                <div class="logo-text">
+                    <h1>CyberDefend</h1>
+                    <span>AWS SLIDES</span>
+                </div>
+            </div>
+            <div class="tagline">Part of Accenture | AWS Cloud Foundation</div>
+        </div>
+
+        <div class="back-link" id="backToDashboardBtn">Back to Dashboard</div>
+
+        <nav class="nav-list">
+            <div class="section-title">☁️ AWS CLOUD FOUNDATION</div>
+
+            <div class="nav-item active" data-slide="1">
+                <span class="check-icon">📘</span> section-1 aws cloud foundation
+            </div>
+            <div class="nav-item" data-slide="2">
+                <span class="check-icon">💰</span> section-2 Free Tier | Pricing | Billing
+            </div>
+            <div class="nav-item" data-slide="3">
+                <span class="check-icon">🌍</span> section-3 Global Infrastructure | Services
+            </div>
+            <div class="nav-item" data-slide="4">
+                <span class="check-icon">🔐</span> section-4 KMS | Cognito | Shield | IAM Lab
+            </div>
+            <div class="nav-item" data-slide="5">
+                <span class="check-icon">🌐</span> section-5 Networking | VPC | ACL/SG
+            </div>
+            <div class="nav-item" data-slide="6">
+                <span class="check-icon">💻</span> section-6 AWS Compute Lab
+            </div>
+            <div class="nav-item" data-slide="7">
+                <span class="check-icon">⚡</span> section-7 Serverless (Lambda Lab)
+            </div>
+            <div class="nav-item" data-slide="8">
+                <span class="check-icon">🐳</span> section-8 Containers | Elastic Beanstalk
+            </div>
+            <div class="nav-item" data-slide="9">
+                <span class="check-icon">💾</span> section-9 AWS Storage (LAB)
+            </div>
+            <div class="nav-item" data-slide="10">
+                <span class="check-icon">🗄️</span> section-10 AWS Database
+            </div>
+            <div class="nav-item" data-slide="11">
+                <span class="check-icon">⚖️</span> section-11 ELB | Auto Scaling | Trusted Advisor
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            ⚡ AWS Cloud Foundation | 11 Modules
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="slides-card">
+            <div class="card-header">
+                <span class="lesson-badge">📊 GOOGLE SLIDES</span>
+                <h2 id="slide-title">section-1 aws cloud foundation</h2>
+                <div class="sub" id="slide-sub">AWS Cloud Fundamentals · Core Concepts · Cloud Computing Basics</div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="slides">📊 Presentation</button>
+                <button class="tab-btn" data-tab="downloads">📥 Open in Google Slides</button>
+            </div>
+
+            <div id="slides" class="tab-content active">
+                <div class="slides-container">
+                    <div class="slides-wrapper">
+                        <iframe id="slides-iframe" src="https://docs.google.com/presentation/d/1rOCgpFji7zpr9Drzf3nzuxcsauk5fi0d/embed?start=false&loop=false&delayms=3000" allowfullscreen="true"></iframe>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <p>📌 Use the <strong>arrow buttons</strong> below the presentation to navigate.<br>
+                    🔍 Click <strong>Fullscreen</strong> for better viewing.<br>
+                    💡 If presentation doesn't load, click the <strong>"Open in Google Slides" tab</strong>.</p>
+                </div>
+            </div>
+
+            <div id="downloads" class="tab-content">
+                <div class="downloads-list">
+                    <div class="download-item">
+                        <div class="download-info">
+                            <h4 id="download-title">📘 section-1 aws cloud foundation</h4>
+                            <p>Open in Google Slides (new tab)</p>
+                        </div>
+                        <a href="https://docs.google.com/presentation/d/1rOCgpFji7zpr9Drzf3nzuxcsauk5fi0d/edit?usp=sharing" target="_blank" id="download-link" class="btn-download">Open in new tab ↗</a>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-info">
+                            <h4>📝 Download as PDF</h4>
+                            <p>Save presentation for offline viewing</p>
+                        </div>
+                        <a href="#" class="btn-download" id="pdfInfoBtn">Info</a>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <p>💡 <strong>Tip:</strong> Use <strong>Open in new tab</strong> → then File → Download as PDF to save the presentation.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            ☁️ CyberDefend Academy — AWS Cloud Foundation | Part of Accenture
+        </footer>
+    </main>
+</div>
+
+<!-- Dashboard Navigation Modal -->
+<div id="dashboardModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>↩️ Return to Dashboard</h3>
+        <p>Go back to the main CyberDefend dashboard, or return to the previous page in your browser.</p>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-primary" id="goToIndexBtn">Go to index.html</button>
+            <button class="modal-btn modal-btn-secondary" id="goBackHistoryBtn">Go back</button>
+            <button class="modal-btn modal-btn-secondary" id="closeModalBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== TAB SWITCHING =====
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-tab');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            const el = document.getElementById(target);
+            if (el) el.classList.add('active');
+        });
+    });
+
+    // ===== PRESENTATION DATA =====
+    const presentationIds = {
+        '1':  '1rOCgpFji7zpr9Drzf3nzuxcsauk5fi0d',
+        '2':  '1XDLlaBvwZYQrX9eZKKQzstgBOkUr8Z_p',
+        '3':  '1IuY8sRLVA6AfPtjbQV6meo91283L1Y6J',
+        '4':  '1JRDCgAczgzO3TolKzkev7J-v9WWPgU1c',
+        '5':  '1Puef3g55PqrFm0nwjW5EUjcG7lqjEeJd',
+        '6':  '1OSMLinKFJgKd36HRmMoF5QwDKhuk-wgA',
+        '7':  '1r56C7QDbuVr_rVDnPJHebK1sXWompI2h',
+        '8':  '1bwn9R7xhqKoED30lVnmrRpe0-as1ufwp',
+        '9':  '1r3TrEf2NzFz6q1BIwAa9DIlTyMHZn3pX',
+        '10': '1qeeZeDe7gc9lusfHxIKSzT04JrMVTZ90',
+        '11': '1rtJB_9jOMUtxFemNkyFOHwn6IxWdL4SQ'
+    };
+
+    const slideTitles = {
+        '1':  'section-1 aws cloud foundation',
+        '2':  'section-2 Aws free tier | Pricing Calculator | Billing | Support Plans | Well-Architected Framework',
+        '3':  'section-3 AWS Global Infrastructure | AWS Services and Service Category | become employable',
+        '4':  'section 4 AWS KMS | Cognito | Shield | Config | Artifact | LAB 1 IAM users',
+        '5':  'section 5 Networking basics | CIDR | Amazon VPC | VPC security (ACL/SG)',
+        '6':  'section6 aws Compute lab',
+        '7':  'section 7 AWS Serverless services (lambda function lab)',
+        '8':  'section 8 AWS Containers services | AWS Elastic Bean Stalk (LAB)',
+        '9':  'section 9 AWS Storage (LAB)',
+        '10': 'section 10 AWS Database',
+        '11': 'Sec 11 AWS Elastic Load Balancing | Auto Scaling | Trusted Advisor | Well Architect'
+    };
+
+    const slideSubtitles = {
+        '1':  'AWS Cloud Fundamentals · Core Concepts · Cloud Computing Basics · Shared Responsibility Model',
+        '2':  'AWS Free Tier limits · Pricing Calculator · Billing & Cost Management · Support Plans · 6 Pillars',
+        '3':  'Regions · Availability Zones · Edge Locations · Service Categories · Certification Paths',
+        '4':  'AWS KMS · Amazon Cognito · AWS Shield · AWS Config · AWS Artifact · IAM Users LAB',
+        '5':  'Networking Fundamentals · CIDR · Amazon VPC · Subnets · Security Groups vs NACLs',
+        '6':  'EC2 basics · AMI · Instance types · User Data · SSH keys · EBS volumes · Compute lab',
+        '7':  'Serverless architecture · AWS Lambda triggers · Lambda function lab · CloudWatch',
+        '8':  'ECS, EKS · Elastic Beanstalk deployment · Hands-on lab workshop',
+        '9':  'S3 buckets · versioning · lifecycle · EBS snapshots · EFS · Storage lab exercises',
+        '10': 'RDS (Aurora, MySQL) · DynamoDB · Redshift · ElastiCache · Use case selection',
+        '11': 'Elastic Load Balancing (ALB/NLB) · Auto Scaling policies · Trusted Advisor'
+    };
+
+    const downloadTitles = {
+        '1':  '📘 section-1 aws cloud foundation',
+        '2':  '💰 section-2 AWS Free Tier & Pricing',
+        '3':  '🌍 section-3 AWS Global Infrastructure',
+        '4':  '🔐 section-4 AWS Security & IAM Lab',
+        '5':  '🌐 section-5 Networking & VPC',
+        '6':  '💻 section-6 AWS Compute Lab',
+        '7':  '⚡ section-7 Serverless & Lambda Lab',
+        '8':  '🐳 section-8 Containers & Elastic Beanstalk',
+        '9':  '💾 section-9 AWS Storage Lab',
+        '10': '🗄️ section-10 AWS Database',
+        '11': '⚖️ section-11 ELB, Auto Scaling & Well-Architected'
+    };
+
+    // ===== DOM REFS =====
+    const navItems = document.querySelectorAll('.nav-item');
+    const slideTitleEl = document.getElementById('slide-title');
+    const slideSubEl = document.getElementById('slide-sub');
+    const slidesIframe = document.getElementById('slides-iframe');
+    const downloadBtn = document.getElementById('download-link');
+    const downloadTitleEl = document.getElementById('download-title');
+    const pdfInfoBtn = document.getElementById('pdfInfoBtn');
+
+    // PDF info button — uses a toast-like inline alert instead of native alert
+    pdfInfoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const infoGrid = document.querySelector('#downloads .info-grid');
+        infoGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        infoGrid.style.background = '#fff3e0';
+        setTimeout(() => { infoGrid.style.background = ''; }, 1500);
+    });
+
+    // ===== ACTIVATE SLIDE =====
+    function activateSlide(id) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[data-slide="${id}"]`);
+        if (active) active.classList.add('active');
+
+        if (slideTitles[id]) slideTitleEl.textContent = slideTitles[id];
+        if (slideSubtitles[id]) slideSubEl.textContent = slideSubtitles[id];
+
+        slidesIframe.src = `https://docs.google.com/presentation/d/${presentationIds[id]}/embed?start=false&loop=false&delayms=3000`;
+        downloadBtn.href = `https://docs.google.com/presentation/d/${presentationIds[id]}/edit?usp=sharing`;
+        if (downloadTitles[id]) downloadTitleEl.textContent = downloadTitles[id];
+
+        // On mobile, close the sidebar drawer after selecting a slide
+        closeSidebar();
+
+        // Scroll main content to top
+        document.querySelector('.main-content').scrollTop = 0;
+
+        // Switch to slides tab
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        tabBtns[0].classList.add('active');
+        document.getElementById('slides').classList.add('active');
+    }
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const id = item.getAttribute('data-slide');
+            if (id && presentationIds[id]) activateSlide(id);
+        });
+    });
+
+    // ===== MOBILE SIDEBAR DRAWER =====
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    hamburgerBtn.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeSidebar();
+            closeModal();
+        }
+    });
+
+    // ===== DASHBOARD MODAL =====
+    const backBtn = document.getElementById('backToDashboardBtn');
+    const modal = document.getElementById('dashboardModal');
+    const goToIndexBtn = document.getElementById('goToIndexBtn');
+    const goBackHistoryBtn = document.getElementById('goBackHistoryBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    function openModal() { modal.classList.add('active'); }
+    function closeModal() { modal.classList.remove('active'); }
+
+    function navigateToIndex() {
+        const parts = window.location.pathname.split('/');
+        parts.pop();
+        const base = parts.join('/') || '';
+        window.location.href = base + '/index.html';
+    }
+
+    backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeSidebar();
+        openModal();
+    });
+    goToIndexBtn.addEventListener('click', () => { closeModal(); navigateToIndex(); });
+    goBackHistoryBtn.addEventListener('click', () => {
+        closeModal();
+        if (window.history.length > 1) window.history.back();
+        else navigateToIndex();
+    });
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // ===== INIT =====
+    activateSlide('1');
+</script>
+</body>
+</html>

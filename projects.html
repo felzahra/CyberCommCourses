@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>CyberDefend Academy · Projects & Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fc;
+            color: #1a2c3e;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== MOBILE TOP BAR ===== */
+        .mobile-topbar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            border-bottom: 1px solid #e6edf4;
+            flex-shrink: 0;
+            z-index: 200;
+        }
+        .mobile-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hamburger-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #e6edf4;
+            border-radius: 10px;
+            background: #f9fbfe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .hamburger-btn:hover { background: #eef2f8; }
+        .hamburger-btn svg { width: 20px; height: 20px; stroke: #1a2c3e; }
+        .mobile-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mobile-logo-icon {
+            background: #02b3e4;
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .mobile-logo-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0b2b3b;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 320px;
+            background: #ffffff;
+            border-right: 1px solid #e6edf4;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            height: 100%;
+        }
+        .brand {
+            padding: 24px 24px 16px 24px;
+            border-bottom: 1px solid #eef2f8;
+            background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .logo-icon {
+            background: #02b3e4;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 6px 12px rgba(2, 179, 228, 0.2);
+        }
+        .logo-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: #0b2b3b;
+            line-height: 1.2;
+        }
+        .logo-text span {
+            font-size: 0.65rem;
+            color: #02b3e4;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .tagline {
+            font-size: 0.7rem;
+            color: #5c6f87;
+            margin-top: 8px;
+            border-left: 3px solid #02b3e4;
+            padding-left: 10px;
+        }
+        .progress-card {
+            background: #f0f9fe;
+            margin: 16px 20px;
+            padding: 12px 16px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress-text { font-size: 0.7rem; font-weight: 600; }
+        .progress-number { font-size: 1.2rem; font-weight: 800; color: #02b3e4; }
+        .main-tabs {
+            display: flex;
+            border-bottom: 1px solid #eef2f8;
+            background: #fff;
+            padding: 0 12px;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #5f7f9c;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 12px 12px 0 0;
+            transition: 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        .tab-btn.active {
+            color: #02b3e4;
+            border-bottom: 3px solid #02b3e4;
+            background: #f9fbfe;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.65rem;
+            color: #8ba0b2;
+            border-top: 1px solid #edf2f7;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ===== SIDEBAR OVERLAY (mobile) ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(2px);
+            z-index: 300;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ===== CONTENT WRAPPER ===== */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
+            background: #f5f7fc;
+            min-width: 0;
+        }
+
+        /* ===== PROJECTS ===== */
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .page-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b2b3b;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+        .page-header p {
+            color: #5c6f87;
+            font-size: 0.9rem;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+        .project-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #eef2f8;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+        }
+        .project-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #f0f4f9;
+        }
+        .project-badge {
+            display: inline-block;
+            background: #e2f0f7;
+            color: #02b3e4;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 30px;
+            margin-bottom: 12px;
+        }
+        .project-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0b2b3b;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+        .project-sub {
+            color: #5c6f87;
+            font-size: 0.8rem;
+        }
+        .project-body {
+            padding: 20px 24px;
+            flex: 1;
+        }
+        .project-body p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        .task-list {
+            background: #fef9e6;
+            border-left: 4px solid #f5a623;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+            font-size: 0.8rem;
+        }
+        .task-list ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        .task-list li {
+            margin: 6px 0;
+            line-height: 1.4;
+        }
+        .project-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid #f0f4f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .btn-project {
+            background: #02b3e4;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .btn-project:hover {
+            background: #028cae;
+        }
+        .btn-github {
+            background: #24292e;
+        }
+        .btn-github:hover {
+            background: #1a1e22;
+        }
+
+        /* ===== GITHUB PORTFOLIO SECTION ===== */
+        .github-portfolio {
+            background: linear-gradient(135deg, #f0f9fe 0%, #ffffff 100%);
+            border-radius: 28px;
+            padding: 32px;
+            margin-top: 20px;
+            border: 1px solid #eef2f8;
+            text-align: center;
+        }
+        .github-portfolio-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .github-icon-circle {
+            background: #24292e;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        .github-portfolio-inner h3 {
+            color: #0b2b3b;
+            margin-bottom: 8px;
+        }
+        .github-portfolio-inner p {
+            color: #5c6f87;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+        .github-stats {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+            color: #5c6f87;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            pointer-events: none;
+        }
+        .toast {
+            background: #0b2b3b;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: #7f8c9a;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+        footer a {
+            color: #02b3e4;
+            text-decoration: none;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #eef2f8; }
+        ::-webkit-scrollbar-thumb { background: #bdd3e4; border-radius: 8px; }
+
+        /* ========================================
+           RESPONSIVE — TABLET (≤ 900px)
+           ======================================== */
+        @media (max-width: 900px) {
+            .sidebar { width: 280px; }
+            .main-content { padding: 24px 20px; }
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        /* ========================================
+           RESPONSIVE — MOBILE (≤ 768px)
+           ======================================== */
+        @media (max-width: 768px) {
+            .mobile-topbar {
+                display: flex;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                max-width: 85vw;
+                z-index: 400;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: none;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+            }
+
+            .sidebar-overlay {
+                display: block;
+                pointer-events: none;
+            }
+
+            .content-wrapper {
+                flex: 1;
+                overflow: hidden;
+            }
+            .main-content {
+                padding: 16px 14px;
+                padding-top: 14px;
+            }
+
+            .page-header { margin-bottom: 24px; }
+            .page-header h2 { font-size: 1.25rem; }
+            .page-header p { font-size: 0.8rem; }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                margin-bottom: 28px;
+            }
+            .project-card {
+                border-radius: 20px;
+            }
+            .project-header {
+                padding: 18px 18px 14px;
+            }
+            .project-badge {
+                font-size: 0.6rem;
+                padding: 3px 10px;
+            }
+            .project-header h3 {
+                font-size: 1.05rem;
+            }
+            .project-sub {
+                font-size: 0.72rem;
+            }
+            .project-body {
+                padding: 16px 18px;
+            }
+            .project-body p {
+                font-size: 0.8rem;
+            }
+            .task-list {
+                padding: 10px 14px;
+                font-size: 0.74rem;
+                border-radius: 10px;
+            }
+            .task-list li {
+                font-size: 0.74rem;
+            }
+            .project-footer {
+                padding: 14px 18px 18px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-project {
+                justify-content: center;
+                padding: 10px 16px;
+            }
+
+            .github-portfolio {
+                padding: 24px 18px;
+                border-radius: 22px;
+            }
+            .github-icon-circle {
+                width: 48px;
+                height: 48px;
+                border-radius: 24px;
+                font-size: 1.5rem;
+            }
+            .github-portfolio-inner h3 { font-size: 1rem; }
+            .github-portfolio-inner p { font-size: 0.78rem; }
+            .github-stats { font-size: 0.62rem; }
+
+            footer {
+                margin-top: 28px;
+                padding-top: 18px;
+                font-size: 0.68rem;
+                padding-bottom: 16px;
+            }
+        }
+
+        /* ========================================
+           RESPONSIVE — SMALL MOBILE (≤ 420px)
+           ======================================== */
+        @media (max-width: 420px) {
+            .mobile-topbar { padding: 10px 12px; }
+            .hamburger-btn { width: 34px; height: 34px; border-radius: 8px; }
+            .hamburger-btn svg { width: 18px; height: 18px; }
+            .mobile-logo-icon { width: 28px; height: 28px; border-radius: 7px; font-size: 0.9rem; }
+            .mobile-logo-text { font-size: 0.88rem; }
+
+            .main-content { padding: 12px 10px; padding-top: 10px; }
+            .page-header h2 { font-size: 1.1rem; }
+            .page-header p { font-size: 0.74rem; }
+
+            .project-header { padding: 14px 14px 12px; }
+            .project-header h3 { font-size: 0.95rem; }
+            .project-sub { font-size: 0.68rem; }
+            .project-body { padding: 12px 14px; }
+            .project-body p { font-size: 0.76rem; margin-bottom: 12px; }
+            .task-list { padding: 8px 12px; font-size: 0.7rem; }
+            .task-list ul { margin-left: 16px; }
+            .task-list li { font-size: 0.7rem; margin: 4px 0; }
+            .project-footer { padding: 12px 14px 14px; gap: 8px; }
+            .btn-project { font-size: 0.7rem; padding: 9px 14px; }
+
+            .github-portfolio { padding: 18px 14px; border-radius: 18px; }
+            .github-portfolio-inner h3 { font-size: 0.92rem; }
+            .github-portfolio-inner p { font-size: 0.72rem; }
+            .github-stats { gap: 8px; font-size: 0.58rem; }
+
+            footer { font-size: 0.62rem; }
+        }
+
+        /* Safe area insets for notched phones */
+        @supports (padding: env(safe-area-inset-top)) {
+            .mobile-topbar {
+                padding-top: calc(12px + env(safe-area-inset-top));
+                padding-left: calc(16px + env(safe-area-inset-left));
+                padding-right: calc(16px + env(safe-area-inset-right));
+            }
+            .sidebar {
+                padding-top: env(safe-area-inset-top);
+            }
+            .main-content {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+            .toast-container {
+                bottom: calc(24px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== MOBILE TOP BAR ===== -->
+<div class="mobile-topbar">
+    <div class="mobile-topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+        <div class="mobile-logo">
+            <div class="mobile-logo-icon">🚀</div>
+            <span class="mobile-logo-text">CyberDefend</span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SIDEBAR OVERLAY ===== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ===== CONTENT WRAPPER ===== -->
+<div class="content-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <div class="logo-text">
+                    <h1>CyberDefend</h1>
+                    <span>PROJECTS</span>
+                </div>
+            </div>
+            <div class="tagline">Part of Accenture | Hands-on Cybersecurity Projects</div>
+        </div>
+        <div class="progress-card">
+            <span class="progress-text">📈 Portfolio Projects</span>
+            <span class="progress-number">6+</span>
+        </div>
+        <div class="main-tabs">
+            <a href="index.html" class="tab-btn">📘 COURSES</a>
+            <a href="projects.html" class="tab-btn active">🚀 PROJECTS</a>
+            <a href="media.html" class="tab-btn">🎨 MEDIA & GIFs</a>
+        </div>
+        <div class="sidebar-footer">
+            ⚡ Real-world security projects & GitHub portfolio
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="projects-container">
+            <div class="page-header">
+                <h2>🚀 Cybersecurity Projects & Portfolio</h2>
+                <p>Hands-on labs, incident response simulations, and real-world security assessments</p>
+            </div>
+
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">🏥 CAPSTONE · INCIDENT RESPONSE</span>
+                        <h3>Navigating a Cybersecurity Incident</h3>
+                        <div class="project-sub">Hospital X Ransomware Response · CISO Briefing</div>
+                    </div>
+                    <div class="project-body">
+                        <p><strong>Scenario:</strong> New healthcare legislation triggers outrage; three partner hospitals hit by ransomware. As SOC analyst, answer: <em>"Are we vulnerable? How should we respond?"</em></p>
+                        <div class="task-list">
+                            <strong>✅ Task List:</strong>
+                            <ul>
+                                <li>Nessus Vulnerability Scan for RDP/SMB vulnerabilities</li>
+                                <li>IR Tabletop Exercise (Detection → Containment → Eradication → Recovery)</li>
+                                <li>SIEM Rule for mass file encryption detection</li>
+                                <li>Executive Summary report for CISO</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="📥 Download IR playbook + Nessus config guide">📁 Download Kit</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">🔍 VULNERABILITY MANAGEMENT</span>
+                        <h3>Nessus Vulnerability Assessment</h3>
+                        <div class="project-sub">Hands-on scanning & remediation planning</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Use Nessus Essentials to scan a Windows/Linux lab environment. Identify critical vulnerabilities, prioritize CVSS scores >7.0, and produce a remediation plan.</p>
+                        <div class="task-list">
+                            <strong>✅ Lab Tasks:</strong>
+                            <ul>
+                                <li>Install Nessus Essentials (free license)</li>
+                                <li>Run authenticated scan on test VM</li>
+                                <li>Analyze findings & prioritize patches</li>
+                                <li>Write memo to IT admins with top 5 fixes</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="📥 Nessus installation guide + sample config">📥 Lab Guide</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">📊 SIEM ENGINEERING</span>
+                        <h3>SIEM Lab: Log Analysis & Correlation</h3>
+                        <div class="project-sub">Elastic Stack / Splunk Free · Custom Dashboards</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Build a mini-SIEM: ingest Windows Event logs and Apache logs. Create alerts for brute-force and web attacks.</p>
+                        <div class="task-list">
+                            <strong>✅ Project Tasks:</strong>
+                            <ul>
+                                <li>Set up Elastic Agent or Splunk Universal Forwarder</li>
+                                <li>Ingest Security.evtx and Apache logs</li>
+                                <li>Create correlation rule: 5+ failed logins → successful logon</li>
+                                <li>Build SOC dashboard (top attackers, geo-map)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="📊 SIEM config scripts + sample logs">📊 Lab Files</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">🎣 PHISHING SIMULATION</span>
+                        <h3>Gophish Phishing Campaign</h3>
+                        <div class="project-sub">Social engineering awareness · Metrics reporting</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Launch a simulated phishing campaign using Gophish. Measure organizational resilience and awareness.</p>
+                        <div class="task-list">
+                            <strong>✅ Campaign Steps:</strong>
+                            <ul>
+                                <li>Install Gophish on Linux VM</li>
+                                <li>Design realistic email template</li>
+                                <li>Configure SMTP relay and landing page</li>
+                                <li>Analyze metrics: open rate, click rate, credential submission</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="🎣 Gophish setup guide + email templates">🎣 Start Lab</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">📋 AUDITING & COMPLIANCE</span>
+                        <h3>Project Auditing Cybersecurity</h3>
+                        <div class="project-sub">Security controls assessment · Compliance frameworks</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Conduct a full security audit for a mid-sized organization. Assess controls against NIST CSF and ISO 27001 standards.</p>
+                        <div class="task-list">
+                            <strong>✅ Audit Deliverables:</strong>
+                            <ul>
+                                <li>Risk assessment matrix</li>
+                                <li>Control gap analysis</li>
+                                <li>Remediation roadmap</li>
+                                <li>Executive summary presentation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="📋 Audit templates + checklist">📋 Download</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-badge">🌍 NATION-STATE INCIDENT</span>
+                        <h3>Responding to a Nation-State Cyber Attack</h3>
+                        <div class="project-sub">APT response · Threat intelligence · Attribution</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Simulate response to a sophisticated APT attack. Analyze indicators of compromise (IOCs), coordinate with federal agencies, and develop containment strategies.</p>
+                        <div class="task-list">
+                            <strong>✅ Response Steps:</strong>
+                            <ul>
+                                <li>Threat hunting using MITRE ATT&CK</li>
+                                <li>Network forensics & IOC extraction</li>
+                                <li>Containment & eradication playbook</li>
+                                <li>After-action report & lessons learned</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#" class="btn-project download-trigger" data-msg="📁 Nation-state IR playbook + IOCs">📁 Download</a>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github">🐙 GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GitHub Portfolio Section -->
+            <div class="github-portfolio">
+                <div class="github-portfolio-inner">
+                    <div class="github-icon-circle">🐙</div>
+                    <div>
+                        <h3>Complete Project Portfolio on GitHub</h3>
+                        <p>All Nanodegree projects, labs, and security assessments are available in my GitHub repository.</p>
+                        <a href="https://github.com/felzahra/udacity-projects" target="_blank" class="btn-project btn-github" style="padding: 10px 28px;">📂 Visit GitHub Repository →</a>
+                    </div>
+                </div>
+                <div class="github-stats">
+                    <span>⭐ 0 stars</span>
+                    <span>👁️ 0 watching</span>
+                    <span>🍴 0 forks</span>
+                    <span>📁 HTML 60.7% · Python 34.6%</span>
+                </div>
+            </div>
+
+            <footer>
+                🚀 CyberDefend Academy — Real-World Cybersecurity Projects | Portfolio by Fatma Alzahraa Alagery<br>
+                📍 All projects available on <a href="https://github.com/felzahra/udacity-projects" target="_blank">GitHub</a>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer">
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ===== MOBILE SIDEBAR DRAWER =====
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    hamburgerBtn.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    // Close sidebar when clicking a tab link inside it (on mobile)
+    document.querySelectorAll('.sidebar .tab-btn').forEach(link => {
+        link.addEventListener('click', () => closeSidebar());
+    });
+
+    // ===== TOAST NOTIFICATION (replaces alert()) =====
+    let toastTimeout;
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        clearTimeout(toastTimeout);
+        toast.textContent = message;
+        toast.classList.remove('show');
+        // Force reflow to restart animation
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    // ===== DOWNLOAD BUTTONS (replaced onclick alerts) =====
+    document.querySelectorAll('.download-trigger').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const msg = btn.getAttribute('data-msg');
+            if (msg) showToast(msg);
+        });
+    });
+</script>
+</body>
+</html>
